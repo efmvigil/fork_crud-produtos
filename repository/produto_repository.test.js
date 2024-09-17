@@ -59,3 +59,42 @@ test('Quando buscar por id inexistente, deve retornar undefined', () => {
   const resultado = produtoRepository.buscarPorId(10);
   expect(resultado).toBeUndefined();
 });
+
+//Cenário de sucesso - atualizar()
+test('Quando atualizar o produto arroz, deve retornar o produto alterado corretamente', () => {
+  const produtoAtualizadoEsperado = {
+    id: 5,
+    nome: 'Arroz branco',
+    categoria: 'Alimento',
+    preco: 5.0,
+  };
+  const produtoAtalizado = produtoRepository.atualizar(1, {
+    id: 5,
+    nome: 'Arroz branco',
+    categoria: 'Alimento',
+    preco: 5.0,
+  });
+  expect(produtoAtalizado).toEqual(produtoAtualizadoEsperado);
+  expect(produtoRepository.listar()).toContainEqual(produtoAtualizadoEsperado);
+});
+
+//Cenário de exceção - atualizar()
+test('Quando tentar atualizar o produto sem nome, nenhuma alteração deve ser feita e deve retornar undefined', () => {
+  const produtoAtualizadoErrado = {
+    id: 6,
+    categoria: 'Alimento',
+    preco: 10.0,
+  };
+  //Inserindo o produto sem categoria
+  const produtoAtalizado = produtoRepository.atualizar(5, {
+    id: 6,
+    categoria: 'Alimento',
+    preco: 10.0,
+  });
+  //O produto não deve retornar
+  expect(produtoAtalizado).toEqual(undefined);
+  //Não deve encontrar na lista o produto errado
+  expect(produtoRepository.listar()).not.toContainEqual(
+    produtoAtualizadoErrado
+  );
+});
