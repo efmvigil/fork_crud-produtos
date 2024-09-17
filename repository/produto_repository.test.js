@@ -126,7 +126,7 @@ test('Quando tentar deletar produto com id inválido, nada deve ser alterado ou 
   expect(produtoRepository.listar()).toEqual(lista);
 });
 
-//Cenário de sucesso - pesquisar por categoria()
+//Cenário de sucesso - pesquisarPorCategoria()
 test('Quando pesquisar pela categoria "alimento", deve retornar a lista de produtos correta', () => {
   const listaEsperada = [
     {
@@ -142,10 +142,46 @@ test('Quando pesquisar pela categoria "alimento", deve retornar a lista de produ
   expect(pesquisa).toEqual(listaEsperada);
 });
 
-//Cenário de exceção - pesquisar por categoria()
+//Cenário de exceção - pesquisarPorCategoria()
 test('Quando pesquisar por categoria inválida, não deve retornar nada', () => {
   const listaEsperada = [];
   const pesquisa = produtoRepository.pesquisarPorCategoria('alimento0');
+
+  //Verifica se retornou uma lista vazia
+  expect(pesquisa).toEqual(listaEsperada);
+});
+
+//Cenário de sucesso - pesquisarPorNomeLike()
+test('Quando pesquisar por nome que contenha "feij", deve retornar a lista de produtos correta', () => {
+  //Insere um terceiro produto para o teste (id=3)
+  produtoRepository.inserir({
+    nome: 'Feijao Vermelho',
+    categoria: 'alimento',
+    preco: 7.0,
+  });
+  const listaEsperada = [
+    {
+      id: 2,
+      nome: 'Feijao',
+      categoria: 'alimento',
+      preco: 7.0,
+    },
+    {
+      id: 3,
+      nome: 'Feijao Vermelho',
+      categoria: 'alimento',
+      preco: 7.0,
+    },
+  ];
+  const pesquisa = produtoRepository.pesquisarPorNomeLike('feij');
+  //Verifica se ambos os elementos foram retornados na lista
+  expect(pesquisa).toEqual(listaEsperada);
+});
+
+//Cenário de exceção - pesquisarPorNomeLike()
+test('Quando pesquisar por nome inexistente, não deve retornar nada', () => {
+  const listaEsperada = [];
+  const pesquisa = produtoRepository.pesquisarPorNomeLike('feij0');
 
   //Verifica se retornou uma lista vazia
   expect(pesquisa).toEqual(listaEsperada);
