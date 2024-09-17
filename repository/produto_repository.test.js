@@ -85,7 +85,6 @@ test('Quando tentar atualizar o produto sem nome, nenhuma alteração deve ser f
     categoria: 'Alimento',
     preco: 10.0,
   };
-  //Inserindo o produto sem categoria
   const produtoAtalizado = produtoRepository.atualizar(5, {
     id: 6,
     categoria: 'Alimento',
@@ -97,4 +96,32 @@ test('Quando tentar atualizar o produto sem nome, nenhuma alteração deve ser f
   expect(produtoRepository.listar()).not.toContainEqual(
     produtoAtualizadoErrado
   );
+});
+
+//Cenário de sucesso - deletar()
+test('Quando deletar o produto com id=5, o elemento correto deve ser removido da lista e retornado', () => {
+  const produtoDeletado = produtoRepository.deletar(5);
+  const produtoDeletadoEsperado = {
+    id: 5,
+    nome: 'Arroz branco',
+    categoria: 'Alimento',
+    preco: 5,
+  };
+  //A função deletar deve retornar o produto deletado
+  expect(produtoDeletado).toEqual(produtoDeletadoEsperado);
+  ////Não deve encontrar na lista o produto deletado
+  expect(produtoRepository.listar()).not.toContainEqual(
+    produtoDeletadoEsperado
+  );
+});
+
+//Cenário de exceção - deletar()
+test('Quando tentar deletar produto com id inválido, nada deve ser alterado ou retornado', () => {
+  const lista = produtoRepository.listar();
+  const produtoDeletadoErrado = produtoRepository.deletar(10);
+
+  //O produto não deve retornar
+  expect(produtoDeletadoErrado).toEqual(undefined);
+  //Verifica se houve alteração na lista
+  expect(produtoRepository.listar()).toEqual(lista);
 });
