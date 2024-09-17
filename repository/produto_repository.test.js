@@ -125,3 +125,28 @@ test('Quando tentar deletar produto com id inválido, nada deve ser alterado ou 
   //Verifica se houve alteração na lista
   expect(produtoRepository.listar()).toEqual(lista);
 });
+
+//Cenário de sucesso - pesquisar por categoria()
+test('Quando pesquisar pela categoria "alimento", deve retornar a lista de produtos correta', () => {
+  const listaEsperada = [
+    {
+      id: 2,
+      nome: 'Feijao',
+      categoria: 'alimento',
+      preco: 7.0,
+    },
+  ];
+  const pesquisa = produtoRepository.pesquisarPorCategoria('alimento');
+
+  //Verifica se retornou o elemento correto
+  expect(pesquisa).toEqual(listaEsperada);
+});
+
+//Cenário de exceção - pesquisar por categoria()
+test('Quando pesquisar por categoria inválida, não deve retornar nada', () => {
+  const listaEsperada = [];
+  const pesquisa = produtoRepository.pesquisarPorCategoria('alimento0');
+
+  //Verifica se retornou uma lista vazia
+  expect(pesquisa).toEqual(listaEsperada);
+});
